@@ -58,16 +58,15 @@ RUN apt-get install --no-install-recommends -y \
 		
 
 # Install IRIS requirements
-RUN	apt-get install zlib1g-dev libncurses5-dev && \
-	wget -O  indri-5.4.tar.gz https://downloads.sourceforge.net/project/lemur/lemur/indri-5.4/indri-5.4.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flemur%2Ffiles%2Flemur%2Findri-5.4%2F&ts=1509711165&use_mirror=ayera && \
-	tar -xvf indri-5.4.tar.gz && \
-	cd indri-5.4 && \
-	./configure && \
-	make && \
-	make install && \
-	apt-get update && apt-get install mysql-server
+RUN	apt-get install zlib1g-dev libncurses5-dev 
+ADD https://downloads.sourceforge.net/project/lemur/lemur/indri-5.4/indri-5.4.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flemur%2Ffiles%2Flemur%2Findri-5.4%2F&ts=1509711165&use_mirror=ayera /indri-5.4.tar.gz 
+RUN tar xfz indri-5.4.tar.gz
+# WORKDIR /tmp/indri-5.4/
+RUN	cd indri-5.4 && ./configure && make && make install
+# WORKDIR /
 
 
+RUN apt-get update && apt-get install mysql-server
 
 # Tidy up
 RUN apt-get -y autoremove && apt-get clean && apt-get autoclean && \
