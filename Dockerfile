@@ -63,7 +63,7 @@ RUN mkdir -p /dir/subdir
 
 # Make sure package is up to date
 RUN apt-get update
-RUN	apt-get install zlib1g-dev libncurses5-dev 
+RUN apt-get install zlib1g-dev libncurses5-dev 
 
 # update and install  g++
 RUN apt-get install gcc g++ mono-mcs
