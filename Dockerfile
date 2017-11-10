@@ -22,11 +22,6 @@ WORKDIR /root
 RUN locale-gen de_DE de_DE.UTF-8
 ENV LANG de_DE.UTF-8
 ENV LANGUAGE de_DE.UTF-8
-
-# Enable PHP 5.4 repo and update apt-get
-# RUN echo "deb http://ppa.launchpad.net/ondrej/php5-oldstable/ubuntu precise main" >> /etc/apt/sources.list && \
-#     apt-key adv --keyserver keyserver.ubuntu.com --recv-key E5267A6C 
-
 RUN apt-get update
 
 # Install and Test PHP
