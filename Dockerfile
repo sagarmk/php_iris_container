@@ -3,6 +3,12 @@ FROM ubuntu:14.04
 MAINTAINER @sagarmankari
 
 
+
+RUN apt-get update && \
+    apt-get -y install gcc mono-mcs && \
+    rm -rf /var/lib/apt/lists/*
+
+
 # Set correct environment variables.
 ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
@@ -57,15 +63,35 @@ RUN apt-get install --no-install-recommends -y \
 		php -m
 		
 
-# Install IRIS requirements
+# Create directory for lemur installation
+RUN mkdir -p /dir/subdir
+
+# Make sure package is up to date
+RUN apt-get update
 RUN	apt-get install zlib1g-dev libncurses5-dev 
-ADD https://downloads.sourceforge.net/project/lemur/lemur/indri-5.4/indri-5.4.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flemur%2Ffiles%2Flemur%2Findri-5.4%2F&ts=1509711165&use_mirror=ayera /indri-5.4.tar.gz 
-RUN tar xfz indri-5.4.tar.gz
-# WORKDIR /tmp/indri-5.4/
-RUN	cd indri-5.4 && ./configure && make && make install
-# WORKDIR /
 
+# update and install  g++
+RUN apt-get install gcc g++ mono-mcs
 
+# install make 
+RUN apt-get install --reinstall make
+
+# install lemur
+WORKDIR /dir
+ADD https://downloads.sourceforge.net/project/lemur/lemur/indri-5.4/indri-5.4.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flemur%2Ffiles%2Flemur%2Findri-5.4%2F&ts=1509711165&use_mirror=ayera /dir/indri-5.4.tar.gz 
+RUN tar -xzf indri-5.4.tar.gz 
+WORKDIR /dir/indri-5.4/ 
+WORKDIR /
+
+#install mysql
+ENV MYSQL_USER=mysql \
+    MYSQL_DATA_DIR=/var/lib/mysql \
+    MYSQL_RUN_DIR=/run/mysqld \
+    MYSQL_LOG_DIR=/var/log/mysql
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server \
+ && rm -rf ${MYSQL_DATA_DIR} \
+ && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install mysql-server
 
 # Tidy up
